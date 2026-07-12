@@ -1,0 +1,3398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="google-adsense-account" content="ca-pub-8984090296542193">
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/static/main.15d5b367f0d2.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@900&display=swap" as="style">
+    
+    <!-- Critical Inline CSS - Must render immediately -->
+    <style>
+        /* CSS Variables */
+        :root {
+            --yellow: #f9c436;
+            --red: #ea352e;
+            --blue: #1a75c4;
+            --green: #19965a;
+            --bg-primary: #f4f1e8;
+            --bg-secondary: #ffffff;
+            --font-main: 'Bungee', cursive;
+            --font-secondary: 'Poppins', sans-serif;
+        }
+
+        /* Base Reset & Layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-secondary);
+            background-color: var(--bg-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Prevent zoom on mobile inputs */
+        input, textarea, select {
+            font-size: 16px;
+        }
+
+        /* Cart Indicator - Critical for UX */
+        .cart-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .cart-indicator.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cart-badge {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f9c436 0%, #ffd700 50%, #f9c436 100%);
+            border: 4px solid #000;
+            border-radius: 8px;
+            box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.4),
+                        inset -2px -2px 0px rgba(0, 0, 0, 0.2),
+                        inset 2px 2px 0px rgba(255, 255, 255, 0.5);
+            font-family: var(--font-main);
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: cartPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            will-change: transform;
+        }
+
+        @keyframes cartPop {
+            0% {
+                transform: scale(0) rotate(-15deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.15) rotate(5deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .cart-badge:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 14px 18px 0px rgba(0, 0, 0, 0.5),
+                        inset -3px -3px 0px rgba(0, 0, 0, 0.2),
+                        inset 3px 3px 0px rgba(255, 255, 255, 0.6);
+        }
+
+        .cart-badge:active {
+            transform: translateY(-2px) scale(0.96);
+            box-shadow: 8px 10px 0px rgba(0, 0, 0, 0.3),
+                        inset -3px -3px 0px rgba(0, 0, 0, 0.2),
+                        inset 3px 3px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        .cart-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.3));
+        }
+
+        .cart-count-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ea352e 0%, #ff5555 100%);
+            border: 3px solid #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.4),
+                        inset -1px -1px 0px rgba(0, 0, 0, 0.2),
+                        inset 1px 1px 0px rgba(255, 255, 255, 0.4);
+            animation: badgePulse 0.5s ease-out;
+        }
+
+        @keyframes badgePulse {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        #cart-count-number {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
+            line-height: 1;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .cart-indicator {
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+            .cart-badge {
+                width: 55px;
+                height: 55px;
+                border: 3px solid #000;
+                box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4),
+                            inset -2px -2px 0px rgba(0, 0, 0, 0.2),
+                            inset 2px 2px 0px rgba(255, 255, 255, 0.5);
+            }
+            .cart-image {
+                width: 35px;
+                height: 35px;
+            }
+            .cart-count-badge {
+                width: 26px;
+                height: 26px;
+                border: 2px solid #000;
+                top: -4px;
+                right: -4px;
+            }
+            #cart-count-number {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-indicator {
+                bottom: 1rem;
+                right: 1rem;
+            }
+            .cart-badge {
+                width: 50px;
+                height: 50px;
+                border: 3px solid #000;
+                box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3),
+                            inset -2px -2px 0px rgba(0, 0, 0, 0.2),
+                            inset 2px 2px 0px rgba(255, 255, 255, 0.5);
+            }
+            .cart-image {
+                width: 30px;
+                height: 30px;
+            }
+            .cart-count-badge {
+                width: 22px;
+                height: 22px;
+                border: 2px solid #000;
+                top: -3px;
+                right: -3px;
+            }
+            #cart-count-number {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    
+    <!-- Load Fonts with font-display swap for better performance -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bungee&family=Poppins:wght@900&display=swap"
+        rel="stylesheet"
+    >
+    
+    <!-- Main CSS - Load synchronously but after critical inline CSS -->
+    <link rel="stylesheet" href="/static/main.15d5b367f0d2.css" type="text/css" />
+    
+    <!-- Font Awesome - Load asynchronously (non-critical) -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"></noscript>
+    
+    <!-- SEO & Meta Tags -->
+    <meta name="description" content="STUDZ backed by STUDS - Official cryptocurrency and merchandise. Explore our collectible tokens and exclusive STUDZ branded products.">
+    <meta name="keywords" content="STUDZ token, crypto token, Solana tokens, blockchain merchandise, collectibles, cryptocurrency shop">
+    <meta name="robots" content="index, follow">
+    <meta name="title" content="STUDZ">
+    <link rel="canonical" href="https://morestudz.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="STUDZ">
+    <meta property="og:description" content="More studs, your studs.">
+    <meta property="og:image" content="https://morestudz.com/static/images/og-image.8e7939750f57.jpg">
+    <meta property="og:site_name" content="STUDZ" />
+    <meta property="og:url" content="https://morestudz.com/">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@morestudz">
+    <meta name="twitter:title" content="STUDZ">
+    <meta name="twitter:description" content="More studs, your studs.">
+    <meta name="twitter:image" content="https://morestudz.com/static/images/og-image.8e7939750f57.jpg">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "STUDZ",
+            "alternateName": "MoreStudz",
+            "url": "https://morestudz.com/"
+        }
+    </script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/static/images/favicon.bb14aef558ce.png" type="image/png">
+
+    <title>STUDZ</title>
+
+    
+<link rel="preload" 
+      as="image" 
+      href="/static/images/hero-bg.28cddfeb2cfc.jpeg"
+      fetchpriority="high">
+
+<!-- Preconnect FIRST - before any other resources -->
+<link rel="preconnect" href="https://api.dexscreener.com">
+<link rel="dns-prefetch" href="https://api.dexscreener.com">
+
+<!-- Lazy load Solana Web3.js only when needed -->
+<script>
+// Lazy load Solana Web3.js only when needed
+window.loadSolanaWeb3 = function() {
+    if (window.solanaWeb3) return Promise.resolve();
+    
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+};
+
+// Load when user interacts with wallet features
+document.addEventListener('DOMContentLoaded', () => {
+    const walletButtons = document.querySelectorAll('[onclick*="connectWallet"]');
+    walletButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            loadSolanaWeb3();
+        }, { once: true });
+    });
+});
+</script>
+
+<style>
+/* Universal Countdown Timer for Hero */
+.hero-timer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 2rem auto 1.5rem;
+    gap: 15px;
+    width: 100%;
+    max-width: 100%;
+}
+
+.hero-timer-wrapper .countdown-container {
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    position: relative;
+    transform: none;
+    margin-top: 0;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-timer-wrapper .countdown-container::before,
+.hero-timer-wrapper .countdown-container::after {
+    display: none;
+}
+
+.hero-timer-wrapper .countdown-label {
+    font-size: 1.2rem !important;
+    margin-bottom: 0.75rem !important;
+    margin-top: 0 !important;
+    color: #000 !important;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    order: 1;
+    white-space: nowrap;
+    padding: 5px;
+    background-color: var(--bg-secondary);
+    border-radius: 100px;
+    border: 3px solid var(--bg-dark);
+    max-width: 75%;
+}
+
+.hero-timer-wrapper .countdown-display {
+    gap: 20px !important;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    order: 2;
+    width: 100%;
+}
+
+.hero-timer-wrapper .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex: 0 1 auto;
+}
+
+.hero-timer-wrapper .countdown-unit::before {
+    display: none;
+}
+
+.hero-timer-wrapper .countdown-number {
+    font-size: 2rem !important;
+    padding: 0 !important;
+    border: 5px solid #000 !important;
+    width: 100px !important;
+    height: 100px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.25) !important;
+    font-weight: 900;
+    color: #000;
+    margin-top: 0;
+    text-align: center;
+    border-radius: 12px !important;
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.hero-timer-wrapper .countdown-display .countdown-unit:nth-of-type(1) .countdown-number {
+    background: linear-gradient(135deg, var(--yellow) 0%, #f0a000 100%) !important;
+    transform: rotate(-3deg) !important;
+}
+
+.hero-timer-wrapper .countdown-display .countdown-unit:nth-of-type(2) .countdown-number {
+    background: linear-gradient(135deg, var(--blue) 0%, #0f5aa7 100%) !important;
+    transform: rotate(2deg) !important;
+}
+
+.hero-timer-wrapper .countdown-display .countdown-unit:nth-of-type(3) .countdown-number {
+    background: linear-gradient(135deg, var(--red) 0%, #c41e1e 100%) !important;
+    transform: rotate(-2deg) !important;
+}
+
+.hero-timer-wrapper .countdown-display .countdown-unit:nth-of-type(4) .countdown-number {
+    background: linear-gradient(135deg, var(--green) 0%, #0f7045 100%) !important;
+    transform: rotate(3deg) !important;
+}
+
+.countdown-unit-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 8px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.hero-timer-wrapper .countdown-separator {
+    display: none;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .hero-timer-wrapper {
+        margin: 1.5rem auto;
+        gap: 10px;
+        padding: 0 10px;
+    }
+
+    .hero-timer-wrapper .countdown-container {
+        gap: 12px;
+        max-width: 90vw;
+    }
+
+    .hero-timer-wrapper .countdown-label {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.5rem !important;
+        text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+        max-width: unset;
+    }
+
+    .hero-timer-wrapper .countdown-display {
+        gap: 8px !important;
+    }
+
+    .hero-timer-wrapper .countdown-number {
+        font-size: 1.1rem !important;
+        border: 4px solid #000 !important;
+        width: 70px !important;
+        height: 70px !important;
+        box-shadow: 5px 5px 0 rgba(0,0,0,0.25) !important;
+        border-radius: 8px !important;
+    }
+
+    .countdown-unit-label {
+        font-size: 0.7rem;
+        margin-top: 4px;
+        letter-spacing: 0.06em;
+    }
+}
+
+/* =========================
+   ADS SECTION STYLES
+   ========================= */
+
+/* ADS Hero Section */
+.ads-hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 0;
+    background-color: var(--yellow);
+    border-bottom: 8px solid #000;
+}
+
+.ads-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.ads-hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+}
+
+/* Stud stud pattern overlay */
+.ads-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(0,0,0,0.1) 4px, transparent 4px),
+        radial-gradient(circle at 75% 25%, rgba(0,0,0,0.1) 4px, transparent 4px),
+        radial-gradient(circle at 25% 75%, rgba(0,0,0,0.1) 4px, transparent 4px),
+        radial-gradient(circle at 75% 75%, rgba(0,0,0,0.1) 4px, transparent 4px);
+    background-size: 60px 60px;
+    z-index: 1;
+}
+
+.ads-hero-content {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 1000px;
+    z-index: 2;
+    position: relative;
+}
+
+.ads-hero-title {
+    font-size: 5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    position: relative;
+    display: inline-block;
+}
+
+/* Heavy shadow on title */
+.ads-hero-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: -1;
+    color: rgba(0,0,0,0.3);
+    font-size: 5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+}
+
+.ads-hero-title .highlight {
+    color: var(--red);
+    position: relative;
+    display: inline-block;
+}
+
+/* Offset highlight */
+.ads-hero-title .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background-color: var(--red);
+    z-index: -1;
+}
+
+.ads-hero-subtitle {
+    font-size: 1.4rem;
+    color: #000;
+    line-height: 1.6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ADS Info Section - Asymmetric Layout */
+.ads-info-section {
+    padding: 6rem 9rem;
+    position: relative;
+}
+
+/* Diagonal divider */
+.ads-info-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(
+        45deg,
+        var(--yellow) 0px,
+        var(--yellow) 30px,
+        var(--red) 30px,
+        var(--red) 60px,
+        var(--blue) 60px,
+        var(--blue) 90px,
+        var(--green) 90px,
+        var(--green) 120px
+    );
+}
+
+.ads-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-top: 4rem;
+}
+
+/* All cards - same distinctive style */
+.ads-info-card {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background-color: #fff;
+    border: 8px solid #000;
+    box-shadow: 16px 16px 0 rgba(0, 0, 0, 0.3);
+    padding: 3rem;
+    position: relative;
+}
+
+/* Color backgrounds for cards */
+.ads-info-card:first-child {
+    background-color: var(--yellow);
+}
+
+.ads-info-card:nth-child(2) {
+    background-color: var(--blue);
+}
+
+.ads-info-card:nth-child(3) {
+    background-color: var(--green);
+}
+
+/* Stud pattern on cards */
+.ads-info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 10% 10%, rgba(0,0,0,0.15) 6px, transparent 6px),
+        radial-gradient(circle at 90% 10%, rgba(0,0,0,0.15) 6px, transparent 6px),
+        radial-gradient(circle at 10% 90%, rgba(0,0,0,0.15) 6px, transparent 6px),
+        radial-gradient(circle at 90% 90%, rgba(0,0,0,0.15) 6px, transparent 6px);
+    background-size: 100px 100px;
+    pointer-events: none;
+}
+
+.ads-info-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 20px 20px 0 rgba(0, 0, 0, 0.4);
+}
+
+.ads-info-icon {
+    font-size: 6rem;
+    margin-bottom: 0;
+    color: #000;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.ads-info-title {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 1rem;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+}
+
+.ads-info-text {
+    font-size: 1.1rem;
+    color: #000;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+/* ADS Contact Section - Industrial Style */
+.ads-contact-section {
+    padding: 6rem 2rem;
+    background-color: var(--red);
+    border-top: 8px solid #000;
+    border-bottom: 8px solid #000;
+    position: relative;
+}
+
+/* Stud pattern background */
+.ads-contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.05) 50%),
+        linear-gradient(0deg, transparent 50%, rgba(0,0,0,0.05) 50%);
+    background-size: 40px 40px;
+    z-index: 0;
+}
+
+.ads-contact-container {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.ads-contact-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.ads-contact-title {
+    font-size: 4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 1rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+}
+
+.ads-contact-subtitle {
+    font-size: 1.3rem;
+    color: #fff;
+    line-height: 1.6;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ads-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: #fff;
+    border: 8px solid #000;
+    box-shadow: 16px 16px 0 rgba(0, 0, 0, 0.4);
+    padding: 3rem;
+    position: relative;
+}
+
+/* Corner accents */
+.ads-contact-form::before,
+.ads-contact-form::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: var(--yellow);
+    border: 4px solid #000;
+}
+
+.ads-contact-form::before {
+    top: -20px;
+    left: -20px;
+}
+
+.ads-contact-form::after {
+    bottom: -20px;
+    right: -20px;
+    background-color: var(--blue);
+}
+
+.ads-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.ads-form-label {
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    letter-spacing: 0.08em;
+}
+
+.ads-form-input,
+.ads-form-textarea {
+    padding: 1.25rem;
+    font-size: 1.1rem;
+    font-family: var(--font-main);
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    color: #000;
+    transition: all 0.15s;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.ads-form-input:focus,
+.ads-form-textarea:focus {
+    outline: none;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.35);
+    transform: translate(-2px, -2px);
+    border-color: var(--blue);
+}
+
+.ads-form-input::placeholder,
+.ads-form-textarea::placeholder {
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.ads-form-textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.ads-submit-btn {
+    padding: 1.5rem 3rem;
+    font-family: var(--font-main);
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 5px solid #000;
+    background-color: var(--green);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
+    position: relative;
+    top: 0;
+    left: 0;
+    letter-spacing: 0.05em;
+}
+
+.ads-submit-btn:hover:not(:disabled) {
+    top: -3px;
+    left: -3px;
+    box-shadow: 13px 13px 0 rgba(0, 0, 0, 0.4);
+    background-color: #0f7045;
+}
+
+.ads-submit-btn:active:not(:disabled) {
+    top: 3px;
+    left: 3px;
+    box-shadow: 7px 7px 0 rgba(0, 0, 0, 0.3);
+}
+
+.ads-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #999;
+}
+
+.ads-contact-message {
+    padding: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 4px solid #000;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ads-contact-message.success {
+    background-color: var(--green);
+    color: #fff;
+}
+
+.ads-contact-message.error {
+    background-color: var(--red);
+    color: #fff;
+}
+
+/* ADS FAQ Section - Flip Card Style */
+.ads-faq-section {
+    padding: 6rem 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Bottom divider */
+.ads-faq-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(
+        -45deg,
+        var(--green) 0px,
+        var(--green) 30px,
+        var(--blue) 30px,
+        var(--blue) 60px,
+        var(--yellow) 60px,
+        var(--yellow) 90px,
+        var(--red) 90px,
+        var(--red) 120px
+    );
+}
+
+.ads-faq-header {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    text-align: center;
+    margin-bottom: 4rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.ads-faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Flip card style FAQ */
+.ads-faq-item {
+    position: relative;
+    perspective: 1000px;
+    height: auto;
+    min-height: 80px;
+}
+
+.ads-faq-question {
+    padding: 2rem;
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s;
+    letter-spacing: 0.03em;
+    border: 6px solid #000;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+/* Color-coded FAQ items */
+.ads-faq-item:nth-child(1) .ads-faq-question {
+    background-color: var(--yellow);
+}
+
+.ads-faq-item:nth-child(2) .ads-faq-question {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.ads-faq-item:nth-child(3) .ads-faq-question {
+    background-color: var(--green);
+    color: #fff;
+}
+
+/* Stud pattern on FAQ */
+.ads-faq-question::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 10% 50%, rgba(0,0,0,0.1) 5px, transparent 5px),
+        radial-gradient(circle at 90% 50%, rgba(0,0,0,0.1) 5px, transparent 5px);
+    background-size: 80px 80px;
+    pointer-events: none;
+}
+
+.ads-faq-question:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.ads-faq-question i {
+    transition: transform 0.3s;
+    font-size: 1.5rem;
+}
+
+.ads-faq-question.active i {
+    transform: rotate(180deg);
+}
+
+.ads-faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s, padding 0.4s;
+    padding: 0 2rem;
+    background-color: #fff;
+    border: 6px solid #000;
+    border-top: none;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 1;
+}
+
+/* Match border color to question */
+.ads-faq-item:nth-child(1) .ads-faq-answer {
+    border-color: var(--yellow);
+}
+
+.ads-faq-item:nth-child(2) .ads-faq-answer {
+    border-color: var(--blue);
+}
+
+.ads-faq-item:nth-child(3) .ads-faq-answer {
+    border-color: var(--green);
+}
+
+.ads-faq-question.active + .ads-faq-answer {
+    max-height: 500px;
+    padding: 2rem;
+}
+
+.ads-faq-answer p {
+    color: #000;
+    line-height: 1.7;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Mobile Responsive Styles for ADS */
+@media (max-width: 768px) {
+    .ads-hero-section {
+        min-height: 350px;
+    }
+
+    .ads-hero-content {
+        padding: 3rem 1.5rem;
+    }
+
+    .ads-hero-title {
+        font-size: 3rem;
+    }
+
+    .ads-hero-title::after {
+        font-size: 3rem;
+        top: 5px;
+        left: 5px;
+    }
+
+    .ads-hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    .ads-info-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .ads-info-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .ads-info-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .ads-info-title {
+        font-size: 1.5rem;
+    }
+
+    .ads-info-text {
+        font-size: 1rem;
+    }
+
+    .ads-contact-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .ads-contact-container {
+        max-width: 100%;
+    }
+
+    .ads-contact-title {
+        font-size: 2.5rem;
+    }
+
+    .ads-contact-subtitle {
+        font-size: 1rem;
+    }
+
+    .ads-contact-form {
+        padding: 2rem;
+    }
+
+    .ads-form-group {
+        gap: 0.5rem;
+    }
+
+    .ads-form-label {
+        font-size: 0.9rem;
+    }
+
+    .ads-form-input,
+    .ads-form-textarea {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .ads-form-textarea {
+        min-height: 120px;
+    }
+
+    .ads-submit-btn {
+        padding: 1.2rem 2rem;
+        font-size: 1.2rem;
+    }
+
+    .ads-contact-message {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .ads-faq-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .ads-faq-header {
+        font-size: 2rem;
+    }
+
+    .ads-faq-question {
+        padding: 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    .ads-faq-answer {
+        padding: 1.5rem;
+    }
+
+    .ads-faq-answer p {
+        font-size: 1rem;
+    }
+}
+</style>
+
+</head>
+<body data-cart-count="0">
+    
+    
+<div id="sticky-nav" class="sticky-nav hidden">
+    <div class="sticky-selector-base">
+        <input type="radio" name="sticky-mode" id="sticky-studz-mode" checked>
+        <label for="sticky-studz-mode" class="sticky-mode-btn sticky-btn-studz">
+            <i class="fas fa-cube"></i>
+        </label>
+
+        <input type="radio" name="sticky-mode" id="sticky-ads-mode">
+        <label for="sticky-ads-mode" class="sticky-mode-btn sticky-btn-ads">
+            <i class="fas fa-bullhorn"></i>
+        </label>
+
+        <input type="radio" name="sticky-mode" id="sticky-game-mode">
+        <label for="sticky-game-mode" class="sticky-mode-btn sticky-btn-game">
+            <i class="fas fa-gamepad"></i>
+        </label>
+
+        <input type="radio" name="sticky-mode" id="sticky-merch-mode">
+        <label for="sticky-merch-mode" class="sticky-mode-btn sticky-btn-merch">
+            <i class="fas fa-shirt"></i>
+        </label>
+    </div>
+</div>
+
+<section class="hero-section">
+    
+    <div class="hero-bg-image">
+        <img src="/static/images/hero-bg.28cddfeb2cfc.jpeg" alt="Background Scene" fetchpriority="high">
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-header">
+             <img src="/static/images/logo.106dad1548ac.png" alt="STUDZ Logo" style="width: 200px;">
+            <h1 class="main-logo">
+                <span class="l-y">B</span><span class="l-r">R</span><span class="l-b">I</span><span class="l-g">X</span>
+            </h1>
+        </div>
+        
+        <p class="hero-subtext">
+            STUDZ backed by STUDS<br />OFFICIAL STUDZ SHOP AND TOKEN<br />NEW MEANING TO STACKING
+        </p>
+
+        <div class="hero-mode-selector">
+            <div class="selector-base">
+                <input type="radio" name="mode" id="studz-mode" checked>
+                <label for="studz-mode" class="mode-btn btn-studz">
+                    <span class="btn-face">
+                        <i class="fas fa-cube"></i>
+                        <span class="btn-text">STUDZ</span>
+                    </span>
+                </label>
+
+                <input type="radio" name="mode" id="ads-mode">
+                <label for="ads-mode" class="mode-btn btn-ads">
+                    <span class="btn-face">
+                        <i class="fas fa-bullhorn"></i>
+                        <span class="btn-text">ADS</span>
+                    </span>
+                </label>
+
+                <input type="radio" name="mode" id="game-mode">
+                <label for="game-mode" class="mode-btn btn-game">
+                    <span class="btn-face">
+                        <i class="fas fa-gamepad"></i>
+                        <span class="btn-text">STAX</span>
+                    </span>
+                </label>
+
+                <input type="radio" name="mode" id="merch-mode">
+                <label for="merch-mode" class="mode-btn btn-merch">
+                    <span class="btn-face">
+                        <i class="fas fa-shirt"></i>
+                        <span class="btn-text">SHOP</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        
+    </div>
+
+</section>
+
+<!-- STUDZ Mode Content -->
+<div id="studz-mode-content" class="mode-content active">
+    <!-- Stud Customizer Section -->
+    <section class="customizer-section" id="customizerSection">
+        <h2 class="customizer-header">GET STUDED!</h2>
+        
+        <div class="export-reminder">
+            Don't forget to screenshot your very own STUDZ stack to share with your friends!
+        </div>
+        
+        <div class="customizer-container">
+            <!-- Left Panel: Text Input -->
+            <div class="customizer-panel text-panel stud-yellow">
+                <div class="panel-title">Names</div>
+                <div class="text-inputs">
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                        <input type="text" id="stud-text-1" class="customizer-input" placeholder="Layer 1" maxlength="7" style="flex: 1;">
+                        <div class="text-color-selector" data-stud="1" style="display: flex; gap: 0.3rem;">
+                            <button class="stud-text-color-btn" data-stud="1" data-color="black" style="width: 32px; height: 32px; background-color: #000; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                            <button class="stud-text-color-btn" data-stud="1" data-color="white" style="width: 32px; height: 32px; background-color: #fff; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                        <input type="text" id="stud-text-2" class="customizer-input" placeholder="Layer 2" maxlength="7" style="flex: 1;">
+                        <div class="text-color-selector" data-stud="2" style="display: flex; gap: 0.3rem;">
+                            <button class="stud-text-color-btn" data-stud="2" data-color="black" style="width: 32px; height: 32px; background-color: #000; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                            <button class="stud-text-color-btn" data-stud="2" data-color="white" style="width: 32px; height: 32px; background-color: #fff; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+                        <input type="text" id="stud-text-3" class="customizer-input" placeholder="Layer 3" maxlength="7" style="flex: 1;">
+                        <div class="text-color-selector" data-stud="3" style="display: flex; gap: 0.3rem;">
+                            <button class="stud-text-color-btn" data-stud="3" data-color="black" style="width: 32px; height: 32px; background-color: #000; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                            <button class="stud-text-color-btn" data-stud="3" data-color="white" style="width: 32px; height: 32px; background-color: #fff; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" id="stud-text-4" class="customizer-input" placeholder="Layer 4" maxlength="7" style="flex: 1;">
+                        <div class="text-color-selector" data-stud="4" style="display: flex; gap: 0.3rem;">
+                            <button class="stud-text-color-btn" data-stud="4" data-color="black" style="width: 32px; height: 32px; background-color: #000; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                            <button class="stud-text-color-btn" data-stud="4" data-color="white" style="width: 32px; height: 32px; background-color: #fff; border: 2px solid #000; cursor: pointer; box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2); transition: all 0.15s;"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center: Stud Stack Preview -->
+             <div class="customizer-preview">
+                 <div class="stud-stack-wrapper">
+                     <div class="customizer-stud stud-1" id="preview-stud-1">
+                          <img src="/static/images/studz-top.cfb7434a810a.png" alt="Top Stud">
+                          <div class="stud-label" id="label-1" style="color: #333333;"></div>
+                      </div>
+                      <div class="customizer-stud stud-2" id="preview-stud-2">
+                          <img src="/static/images/studz-top.cfb7434a810a.png" alt="Middle Stud">
+                          <div class="stud-label" id="label-2" style="color: #333333;"></div>
+                      </div>
+                      <div class="customizer-stud stud-3" id="preview-stud-3">
+                          <img src="/static/images/studz-top.cfb7434a810a.png" alt="Middle Stud">
+                          <div class="stud-label" id="label-3" style="color: #333333;"></div>
+                      </div>
+                      <div class="customizer-stud stud-4" id="preview-stud-4">
+                          <img src="/static/images/studz-top.cfb7434a810a.png" alt="Bottom Stud">
+                          <div class="stud-label" id="label-4" style="color: #333333;"></div>
+                      </div>
+                 </div>
+             </div>
+            
+            <!-- Right Panel: Color Picker -->
+            <div class="customizer-panel color-panel stud-blue">
+                <div class="panel-title">Colors</div>
+                <div class="color-inputs">
+                    <div class="color-input-group">
+                        <label for="color-1">Layer 1</label>
+                        <div class="color-options" id="color-options-1"></div>
+                    </div>
+                    <div class="color-input-group">
+                        <label for="color-2">Layer 2</label>
+                        <div class="color-options" id="color-options-2"></div>
+                    </div>
+                    <div class="color-input-group">
+                        <label for="color-3">Layer 3</label>
+                        <div class="color-options" id="color-options-3"></div>
+                    </div>
+                    <div class="color-input-group">
+                        <label for="color-4">Layer 4</label>
+                        <div class="color-options" id="color-options-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="customizer-button-group">
+            <button class="customizer-btn btn-buy">Buy It</button>
+        </div>
+    </section>
+
+    <!-- Random Studz-Stack Section -->
+    <section class="random-studz-section">
+        <div class="random-bg-image">
+            <img src="/static/images/random-bg.038031313d1a.jpg" alt="Mystery Background">
+        </div>
+
+        <div class="random-content">
+            <div class="random-text-content">
+                <h2 class="random-header">Can't decide?<br><span class="highlight">We got you.</span></h2>
+                <p class="random-lead">We send you a mystery STUDZ stack. It's our studed up version of a fortune cookie</p>
+            </div>
+
+            <div class="mystery-button-wrapper">
+                <div class="mystery-button-shake">
+                    <button class="mystery-cta-button" onclick="openMysteryBox()">
+                         <img src="/static/images/mystery-box.0124fa1d33d4.png" alt="Mystery Box Button">
+                         <span class="button-text">LET'S GO</span>
+                     </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-strip">
+            <div class="carousel-track">
+                <div class="carousel-item">STUDED UP AND LOWKEY</div>
+                <div class="carousel-item">LOWKEY SUPER STUDED UP</div>
+                <div class="carousel-item">STOP MAKING ME STUDED</div>
+                <div class="carousel-item">STUDED UP LIKE STONEHENGE</div>
+                <div class="carousel-item">SURPRISE! YOU'RE STUDED UP!</div>
+                <div class="carousel-item">SURPRISE! I'M STUDED UP!</div>
+                <div class="carousel-item">UH OH IM STUDED UP</div>
+                <div class="carousel-item">HOUSTON! WE'RE STUDED UP</div>
+                <div class="carousel-item">ALIENS LOWK STUD ME UP</div>
+                <div class="carousel-item">STUDED UP FOR TONIGHT</div>
+                <div class="carousel-item">SLOWLY GETTING MORE STUDED</div>
+                <div class="carousel-item">STUDED UP IN LOVE</div>
+                <div class="carousel-item">IN LOVE WITH STUDED UP</div>
+                <div class="carousel-item">STUDZ GETS ME STUDED</div>
+                <div class="carousel-item">STRANGE HOW STUDED I AM</div>
+                <div class="carousel-item">STUDED UP AND COOL</div>
+                <div class="carousel-item">STUDED UP AND WINNING</div>
+                <div class="carousel-item">STUDED UP AND GAMING</div>
+                <div class="carousel-item">STUDED UP AND LOWKEY</div>
+                <div class="carousel-item">LOWKEY SUPER STUDED UP</div>
+                <div class="carousel-item">STOP MAKING ME STUDED</div>
+                <div class="carousel-item">STUDED UP LIKE STONEHENGE</div>
+                <div class="carousel-item">SURPRISE! YOU'RE STUDED UP!</div>
+                <div class="carousel-item">SURPRISE! I'M STUDED UP!</div>
+                <div class="carousel-item">UH OH IM STUDED UP</div>
+                <div class="carousel-item">HOUSTON! WE'RE STUDED UP</div>
+                <div class="carousel-item">ALIENS LOWK STUD ME UP</div>
+                <div class="carousel-item">STUDED UP FOR TONIGHT</div>
+                <div class="carousel-item">SLOWLY GETTING MORE STUDED</div>
+                <div class="carousel-item">STUDED UP IN LOVE</div>
+                <div class="carousel-item">IN LOVE WITH STUDED UP</div>
+                <div class="carousel-item">STUDZ GETS ME STUDED</div>
+                <div class="carousel-item">STRANGE HOW STUDED I AM</div>
+                <div class="carousel-item">STUDED UP AND COOL</div>
+                <div class="carousel-item">STUDED UP AND WINNING</div>
+                <div class="carousel-item">STUDED UP AND GAMING</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STUDZ FAQ Section -->
+    <section class="faq-section">
+        <h2 class="faq-header">Burning Questions</h2>
+        
+        <div class="faq-container">
+            <div class="faq-flipper" onclick="this.classList.toggle('flipped')">
+                <div class="faq-card-inner">
+                    <div class="faq-face faq-front stud-yellow">
+                        <span class="faq-question">What makes STUDZ special?</span>
+                        
+                        <div class="action-sticker">
+                            <span class="sticker-text">FLIP!</span>
+                        </div>
+                        
+                        <div class="stud-pattern"></div>
+                    </div>
+                    <div class="faq-face faq-back">
+                        <p class="faq-answer-text">STUDZ is backed by STUDS. Founded and created by a notable and real company, ODDMock LLC. Rarely do you get to be part of such a safe and innovative vision that combines physical value, social movement, and digital infrastructure.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-flipper" onclick="this.classList.toggle('flipped')">
+                <div class="faq-card-inner">
+                    <div class="faq-face faq-front stud-blue">
+                        <span class="faq-question">What will STUDZ be?</span>
+                        
+                        <div class="action-sticker">
+                            <span class="sticker-text">FLIP!</span>
+                        </div>
+                        
+                        <div class="stud-pattern"></div>
+                    </div>
+                    <div class="faq-face faq-back">
+                        <p class="faq-answer-text">Starting with our entry into the delivery of your real, custom STUDZ stacks, we plan to combine utility and innovative ideas into our growth. Starting by tying the virtual and physical realm together.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-flipper" onclick="this.classList.toggle('flipped')">
+                <div class="faq-card-inner">
+                    <div class="faq-face faq-front stud-green">
+                        <span class="faq-question">Need STUDZ support?</span>
+                        
+                        <div class="action-sticker">
+                            <span class="sticker-text">FLIP!</span>
+                        </div>
+                        
+                        <div class="stud-pattern"></div>
+                    </div>
+                    <div class="faq-face faq-back">
+                        <p class="faq-answer-text">Contact us at support@morestudz.com or reach out via our social DM's!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section class="social-section">
+        
+        <div class="social-corner corner-left corner-top">
+            <img src="/static/images/bottom-studs.f3a825f30852.png" alt="Stud Decor">
+        </div>
+        <div class="social-corner corner-right corner-top">
+            <img src="/static/images/bottom-studs.f3a825f30852.png" alt="Stud Decor">
+        </div>
+
+        <div class="social-corner corner-left corner-bottom">
+            <img src="/static/images/bottom-studs.f3a825f30852.png" alt="Stud Decor">
+        </div>
+        <div class="social-corner corner-right corner-bottom">
+            <img src="/static/images/bottom-studs.f3a825f30852.png" alt="Stud Decor">
+        </div>
+
+        <div class="social-header">
+            <h2 class="social-title">Check Our Socials</h2>
+            <div class="social-links">
+                <a href="https://www.instagram.com/studz/" target="_blank" class="social-link-btn social-btn-instagram" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                    Instagram
+                </a>
+                <a href="https://x.com/morestudz" target="_blank" class="social-link-btn social-btn-x" title="X">
+                    <i class="fab fa-twitter"></i>
+                    X/Twitter
+                </a>
+                <a href="https://www.tiktok.com/@morestudz" target="_blank" class="social-link-btn social-btn-tiktok" title="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                    TikTok
+                </a>
+                <a href="https://www.youtube.com/@morestudz" target="_blank" class="social-link-btn social-btn-youtube" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                    YouTube
+                </a>
+                <a href="https://www.snapchat.com/@morestudz" target="_blank" class="social-link-btn social-btn-snapchat" title="Snapchat">
+                    <i class="fab fa-snapchat"></i>
+                    Snapchat
+                </a>
+            </div>
+        </div>
+
+        
+            <div class="reels-carousel-wrapper">
+                <button class="carousel-nav carousel-nav-left" onclick="scrollCarousel('left')">❮</button>
+                <div class="reels-carousel-container">
+                    <div class="reels-carousel">
+                        
+                            <div class="reel-item">
+                                <div class="reel-video-container">
+                                    
+                                        
+                                            <video muted loop playsinline class="reel-media" data-src="https://more-studz.s3.amazonaws.com/social_embeds/Studz_Text_Change_37_V01_without_BGM_2.mp4">
+                                                <source data-src="https://more-studz.s3.amazonaws.com/social_embeds/Studz_Text_Change_37_V01_without_BGM_2.mp4" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        
+                                    
+                                    <div class="reel-stats">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="reel-item">
+                                <div class="reel-video-container">
+                                    
+                                        
+                                            <video muted loop playsinline class="reel-media" data-src="https://more-studz.s3.amazonaws.com/social_embeds/Lego_Studz_Text_Change_155_V01_without_BGM.mp4">
+                                                <source data-src="https://more-studz.s3.amazonaws.com/social_embeds/Lego_Studz_Text_Change_155_V01_without_BGM.mp4" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        
+                                    
+                                    <div class="reel-stats">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="reel-item">
+                                <div class="reel-video-container">
+                                    
+                                        
+                                            <video muted loop playsinline class="reel-media" data-src="https://more-studz.s3.amazonaws.com/social_embeds/Studz_Text_Change_138_V01_without_BGM.mp4">
+                                                <source data-src="https://more-studz.s3.amazonaws.com/social_embeds/Studz_Text_Change_138_V01_without_BGM.mp4" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        
+                                    
+                                    <div class="reel-stats">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="reel-item">
+                                <div class="reel-video-container">
+                                    
+                                        
+                                            <video muted loop playsinline class="reel-media" data-src="https://more-studz.s3.amazonaws.com/social_embeds/Tornado_Studz_Text_Change_115_V01_without_BGM_LKI36Sb.mp4">
+                                                <source data-src="https://more-studz.s3.amazonaws.com/social_embeds/Tornado_Studz_Text_Change_115_V01_without_BGM_LKI36Sb.mp4" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        
+                                    
+                                    <div class="reel-stats">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div class="reel-item">
+                                <div class="reel-video-container">
+                                    
+                                        
+                                            <video muted loop playsinline class="reel-media" data-src="https://more-studz.s3.amazonaws.com/social_embeds/Tornado_Studz_Text_Change_115_V01_without_BGM.mp4">
+                                                <source data-src="https://more-studz.s3.amazonaws.com/social_embeds/Tornado_Studz_Text_Change_115_V01_without_BGM.mp4" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        
+                                    
+                                    <div class="reel-stats">
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                </div>
+                <button class="carousel-nav carousel-nav-right" onclick="scrollCarousel('right')">❯</button>
+            </div>
+        
+    </section>
+
+    <section class="stud-cta-section" id="studCta">
+        <div class="revealed-content">
+            <div class="revealed-text">
+                <h2 class="toy-header">NEVER STOP <span class="highlight-toy">BUILDING</span></h2>
+                <p class="toy-lead">Get studed up with our latest updates.</p>
+                
+                <div class="newsletter-subscription-wrapper">
+                    <form id="newsletterForm" class="newsletter-form">
+                        <div class="newsletter-input-group">
+                            <input 
+                                type="email" 
+                                id="emailInput" 
+                                class="newsletter-email-input" 
+                                placeholder="Enter your email"
+                                required
+                            >
+                            <button type="submit" class="newsletter-submit-btn">
+                                <span class="btn-text">SUBSCRIBE</span>
+                            </button>
+                        </div>
+                        <div id="subscriptionMessage" class="subscription-message" style="display: none;"></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="floor-graphic"></div>
+        </div>
+
+        <div class="construction-strip construction-strip-top"></div>
+
+        <div class="wall-layer" id="studWall">
+            <div class="wall-message">
+                <h3>SMASH THE STUDZ BARRIER</h3>
+                <p><i class="fa-solid fa-arrow-pointer"></i> CLICK TO BREAK <i class="fa-solid fa-arrow-pointer"></i></p>
+            </div>
+            
+            <div class="impact-container" id="impactContainer"></div>
+        </div>
+
+        <div class="construction-strip construction-strip-bottom"></div>
+    </section>
+</div>
+
+<!-- ADS Mode Content -->
+<div id="ads-mode-content" class="mode-content">
+
+    <!-- ADS Hero Section -->
+    <section class="ads-hero-section">
+        <div class="ads-hero-bg">
+            <img src="/static/images/hero-bg.28cddfeb2cfc.jpeg" alt="Background">
+        </div>
+        <div class="ads-hero-content">
+            <h2 class="ads-hero-title">ADVERTISE WITH <span class="highlight">STUDZ</span></h2>
+            <p class="ads-hero-subtitle">Partner with the fastest-growing stud-based brand and reach thousands of engaged customers.</p>
+        </div>
+    </section>
+
+    <!-- ADS Info Section -->
+    <section class="ads-info-section">
+        <div class="ads-info-container">
+            <div class="ads-info-card stud-yellow">
+                <div class="ads-info-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="ads-info-title">Engaged Audience</h3>
+                <p class="ads-info-text">Reach thousands of loyal STUDZ enthusiasts who are passionate about our brand and products.</p>
+            </div>
+            <div class="ads-info-card stud-blue">
+                <div class="ads-info-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="ads-info-title">Growing Community</h3>
+                <p class="ads-info-text">Tap into our rapidly expanding community across social media platforms and our website.</p>
+            </div>
+            <div class="ads-info-card stud-green">
+                <div class="ads-info-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3 class="ads-info-title">Custom Partnerships</h3>
+                <p class="ads-info-text">We offer flexible advertising packages tailored to your brand's unique needs and goals.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADS Contact Form Section -->
+    <section class="ads-contact-section">
+        <div class="ads-contact-container">
+            <div class="ads-contact-header">
+                <h2 class="ads-contact-title">GET IN TOUCH</h2>
+                <p class="ads-contact-subtitle">Ready to partner with STUDZ? Fill out the form below and we'll get back to you within 24 hours.</p>
+            </div>
+
+            <form id="adsContactForm" class="ads-contact-form">
+                <div class="ads-form-group">
+                    <label for="ads-name" class="ads-form-label">Name *</label>
+                    <input
+                        type="text"
+                        id="ads-name"
+                        name="name"
+                        class="ads-form-input"
+                        placeholder="Your name"
+                        required
+                    >
+                </div>
+
+                <div class="ads-form-group">
+                    <label for="ads-email" class="ads-form-label">Email *</label>
+                    <input
+                        type="email"
+                        id="ads-email"
+                        name="email"
+                        class="ads-form-input"
+                        placeholder="your@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="ads-form-group">
+                    <label for="ads-company" class="ads-form-label">Company</label>
+                    <input
+                        type="text"
+                        id="ads-company"
+                        name="company"
+                        class="ads-form-input"
+                        placeholder="Your company name (optional)"
+                    >
+                </div>
+
+                <div class="ads-form-group">
+                    <label for="ads-message" class="ads-form-label">Message *</label>
+                    <textarea
+                        id="ads-message"
+                        name="message"
+                        class="ads-form-textarea"
+                        placeholder="Tell us about your advertising goals and how you'd like to partner with STUDZ..."
+                        rows="5"
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="ads-submit-btn">
+                    <span class="btn-text">SEND INQUIRY</span>
+                </button>
+
+                <div id="ads-contact-message" class="ads-contact-message" style="display: none;"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- ADS FAQ Section -->
+    <section class="ads-faq-section">
+        <h2 class="ads-faq-header">FREQUENTLY ASKED QUESTIONS</h2>
+
+        <div class="ads-faq-container">
+            <div class="ads-faq-item">
+                <div class="ads-faq-question" onclick="this.classList.toggle('active')">
+                    <span>What advertising opportunities are available?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="ads-faq-answer">
+                    <p>We offer various advertising opportunities including sponsored content, banner placements, social media collaborations, and custom partnerships. Contact us to discuss what works best for your brand.</p>
+                </div>
+            </div>
+
+            <div class="ads-faq-item">
+                <div class="ads-faq-question" onclick="this.classList.toggle('active')">
+                    <span>What is your audience demographics?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="ads-faq-answer">
+                    <p>Our audience consists primarily of young adults (18-35) who are interested in collectibles, gaming, and unique products. They are highly engaged and active across our social media platforms.</p>
+                </div>
+            </div>
+
+            <div class="ads-faq-item">
+                <div class="ads-faq-question" onclick="this.classList.toggle('active')">
+                    <span>How do I get started?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="ads-faq-answer">
+                    <p>Simply fill out the contact form above with your details and advertising goals. Our team will review your inquiry and get back to you within 24 hours to discuss potential partnership opportunities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="copyright-plate">
+            <div class="plate-studs left"></div>
+            <p>&copy; 2026 <span class="logo-text">
+                <span class="letter-b">B</span>
+                <span class="letter-r">R</span>
+                <span class="letter-i">I</span>
+                <span class="letter-x">X</span>
+            </span>
+                LLC by <a href="https://oddmock.com/" target="_blank">ODDMock LLC</a></p>
+            <div class="plate-studs right"></div>
+        </div>
+        
+        <div class="footer-decor">
+            <div class="floor-stud yellow"></div>
+            <div class="floor-stud red"></div>
+            <div class="floor-stud blue"></div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Mint address copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+        });
+    }
+
+    // ===== MYSTERY BOX FUNCTIONALITY =====
+    function openMysteryBox() {
+        const button = document.querySelector('.mystery-cta-button');
+        button.classList.add('opening');
+        
+        // Create confetti effect
+        createConfetti();
+        
+        // Remove the opening class after animation completes
+        setTimeout(() => {
+            button.classList.remove('opening');
+            button.style.display = 'none';
+            
+            // Build URL params with mystery flag
+            const params = new URLSearchParams();
+            params.append('product_id', '2');
+            params.append('is_mystery', 'true');
+            
+            window.location.href = `/checkout?${params.toString()}`;
+        }, 800);
+    }
+
+    function createConfetti() {
+        const confettiPieces = 30;
+        const container = document.querySelector('.random-content');
+        
+        for (let i = 0; i < confettiPieces; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = '50%';
+            confetti.style.top = '50%';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = [
+                'var(--yellow)',
+                'var(--red)',
+                'var(--blue)',
+                'var(--green)'
+            ][Math.floor(Math.random() * 4)];
+            confetti.style.borderRadius = '50%';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '100';
+            
+            const angle = (Math.PI * 2 * i) / confettiPieces;
+            const velocity = 5 + Math.random() * 5;
+            const vx = Math.cos(angle) * velocity;
+            const vy = Math.sin(angle) * velocity;
+            
+            document.body.appendChild(confetti);
+            
+            let x = 0;
+            let y = 0;
+            const startTime = Date.now();
+            
+            function animateConfetti() {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / 600;
+                
+                x += vx;
+                y += vy + 0.2; // gravity
+                
+                confetti.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                confetti.style.opacity = Math.max(0, 1 - progress);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateConfetti);
+                } else {
+                    confetti.remove();
+                }
+            }
+            
+            animateConfetti();
+        }
+    }
+
+    // ===== STUD CUSTOMIZER FUNCTIONALITY =====
+    function getLuminance(hex) {
+        const rgb = parseInt(hex.slice(1), 16);
+        const r = (rgb >> 16) & 0xff;
+        const g = (rgb >> 8) & 0xff;
+        const b = (rgb >> 0) & 0xff;
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    }
+
+        // Store selected colors for each layer
+        const selectedColors = {
+            1: null,
+            2: null,
+            3: null,
+            4: null
+        };
+        
+        // Store selected text colors for each stud (default to black)
+        const selectedTextColors = {
+            1: '#333333',
+            2: '#333333',
+            3: '#333333',
+            4: '#333333'
+        };
+
+        // Load stud colors from API
+        async function loadStudColors() {
+            try {
+                const response = await fetch('/api/stud-colors/');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    console.error('Failed to load stud colors');
+                    return;
+                }
+                
+                const colors = data.colors;
+                
+                // Assign random colors to each layer on initial load
+                for (let i = 1; i <= 4; i++) {
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    selectedColors[i] = randomColor.hex_code;
+                }
+                
+                // Render color options for each layer
+                for (let i = 1; i <= 4; i++) {
+                    const container = document.getElementById(`color-options-${i}`);
+                    if (!container) continue;
+                    
+                    container.innerHTML = '';
+                    
+                    colors.forEach(color => {
+                        const button = document.createElement('button');
+                        button.className = 'color-option';
+                        button.style.backgroundColor = color.hex_code;
+                        button.title = color.name;
+                        button.dataset.colorId = color.id;
+                        button.dataset.colorHex = color.hex_code;
+                        button.dataset.colorName = color.name;
+                        button.type = 'button';
+                        
+                        // Set initial selection
+                        if (color.hex_code === selectedColors[i]) {
+                            button.classList.add('selected');
+                        }
+                        
+                        // Add click handler
+                        button.addEventListener('click', () => selectColor(i, color.hex_code, button));
+                        
+                        // Append to container
+                        container.appendChild(button);
+                    });
+                    
+                    // Apply color to stud preview
+                    const studElement = document.getElementById(`preview-stud-${i}`);
+                    if (studElement) {
+                        studElement.style.setProperty(`--stud-${i}-color`, selectedColors[i]);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading stud colors:', error);
+            }
+        }
+
+        // Handle color selection
+        function selectColor(layerIndex, hexColor, buttonElement) {
+            // Update selected colors object
+            selectedColors[layerIndex] = hexColor;
+            
+            // Remove selected class from all options in this layer
+            const container = document.getElementById(`color-options-${layerIndex}`);
+            if (container) {
+                container.querySelectorAll('.color-option').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+            }
+            
+            // Add selected class to clicked button
+            buttonElement.classList.add('selected');
+            
+            // Update stud preview
+            const studElement = document.getElementById(`preview-stud-${layerIndex}`);
+            if (studElement) {
+                studElement.style.setProperty(`--stud-${layerIndex}-color`, hexColor);
+                
+                // Set text color based on brightness
+                const labelElement = document.getElementById(`label-${layerIndex}`);
+                if (labelElement) {
+                    const luminance = getLuminance(hexColor);
+                    labelElement.style.color = luminance > 0.5 ? '#333333' : 'var(--bg-secondary)';
+                }
+            }
+        }
+
+        function initializeCustomizer() {
+            const textInputs = document.querySelectorAll('.customizer-input');
+            
+            // Load colors from database
+            loadStudColors();
+            
+            // Per-stud text color button listeners
+            const studTextColorBtns = document.querySelectorAll('.stud-text-color-btn');
+            studTextColorBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const studNum = btn.dataset.stud;
+                    const color = btn.dataset.color;
+                    
+                    // Remove selection styling from all buttons in this stud's selector
+                    const selector = document.querySelector(`.text-color-selector[data-stud="${studNum}"]`);
+                    if (selector) {
+                        selector.querySelectorAll('.stud-text-color-btn').forEach(b => {
+                            b.style.border = '2px solid #000';
+                            b.style.boxShadow = '2px 2px 0 rgba(0, 0, 0, 0.2)';
+                        });
+                    }
+                    
+                    // Add selection styling to clicked button
+                    btn.style.border = '2px solid #000';
+                    btn.style.boxShadow = '0 0 0 2px #000, 2px 2px 0 rgba(0, 0, 0, 0.3)';
+                    
+                    selectedTextColors[studNum] = color === 'white' ? '#ffffff' : '#333333';
+                    
+                    // Update stud label color
+                    const labelElement = document.getElementById(`label-${studNum}`);
+                    if (labelElement) {
+                        labelElement.style.color = color === 'white' ? '#ffffff' : '#333333';
+                    }
+                });
+                
+                // Set initial selection on black button (all default to black)
+                if (btn.dataset.color === 'black') {
+                    btn.style.border = '2px solid #000';
+                    btn.style.boxShadow = '0 0 0 2px #000, 2px 2px 0 rgba(0, 0, 0, 0.3)';
+                }
+            });
+            
+            // Text input listeners
+            textInputs.forEach((input, index) => {
+                const labelElement = document.getElementById(`label-${index + 1}`);
+                if (labelElement) {
+                    input.addEventListener('input', (e) => {
+                        const text = e.target.value.trim();
+                        labelElement.textContent = text || '';
+                    });
+                }
+            });
+
+            // Helper function to trigger stud stacking animation
+            async function triggerStudStackAnimation() {
+                const wrapper = document.querySelector('.stud-stack-wrapper');
+                
+                // Play stacking sound
+                AudioManager.play('studzStacking');
+                
+                document.querySelectorAll('.customizer-stud').forEach((stud, index) => {
+                    stud.style.setProperty('--stud-index', index);
+                    stud.classList.add('stacked');
+                });
+                if (wrapper) {
+                    wrapper.classList.add('stacked');
+                }
+
+                // Wait for animation to complete
+                await new Promise(resolve => setTimeout(resolve, 350));
+            }
+
+
+
+            // Setup stud stacking and redirect on buy button
+            const buyBtn = document.querySelector('.btn-buy');
+            if (buyBtn) {
+                buyBtn.addEventListener('click', async function() {
+                    await triggerStudStackAnimation();
+                    
+                    // Build URL params with stud data
+                    const params = new URLSearchParams();
+                    const textInputs = document.querySelectorAll('.customizer-input');
+                    
+                    // Add product_id=1 for custom stud stack
+                    params.append('product_id', '1');
+                    
+                    // Add selected colors for each layer
+                    Object.entries(selectedColors).forEach(([layerIndex, color]) => {
+                        if (color) {
+                            params.append(`color${layerIndex}`, color);
+                        }
+                    });
+                    
+                    textInputs.forEach((input, index) => {
+                        const text = input.value.trim();
+                        if (text) {
+                            params.append(`text${index + 1}`, text);
+                        }
+                    });
+                    
+                    // Add text color for each layer
+                    params.append(`textColor1`, selectedTextColors[1]);
+                    params.append(`textColor2`, selectedTextColors[2]);
+                    params.append(`textColor3`, selectedTextColors[3]);
+                    params.append(`textColor4`, selectedTextColors[4]);
+                    
+                    const queryString = params.toString();
+                    window.location.href = `/checkout?${queryString}`;
+                });
+                }
+                }
+
+    // Start counter when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCustomizer();
+        });
+    } else {
+        initializeCustomizer();
+    }
+
+    // ===== URL MODE PARAMETER HANDLING =====
+    // Check for mode parameter in URL (e.g., /?mode=coin)
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const modeParam = urlParams.get('mode');
+        
+        if (modeParam) {
+            // Small delay to ensure radio elements are loaded
+            setTimeout(() => {
+                if (modeParam === 'ads') {
+                    const adsRadio = document.getElementById('ads-mode');
+                    if (adsRadio) adsRadio.checked = true;
+                    // Trigger change event to update UI
+                    adsRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+                } else if (modeParam === 'studz') {
+                    const studzRadio = document.getElementById('studz-mode');
+                    if (studzRadio) studzRadio.checked = true;
+                    studzRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+                } else if (modeParam === 'game') {
+                    const gameRadio = document.getElementById('game-mode');
+                    if (gameRadio) gameRadio.checked = true;
+                    gameRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+                } else if (modeParam === 'merch') {
+                    const merchRadio = document.getElementById('merch-mode');
+                    if (merchRadio) merchRadio.checked = true;
+                    merchRadio?.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }, 10);
+        }
+    })();
+
+    // Mode switching functionality
+    const adsModeRadio = document.getElementById('ads-mode');
+    const studzModeRadio = document.getElementById('studz-mode');
+    const gameModeRadio = document.getElementById('game-mode');
+    const merchModeRadio = document.getElementById('merch-mode');
+    const studzModeContent = document.getElementById('studz-mode-content');
+    const adsModeContent = document.getElementById('ads-mode-content');
+    const stickyNav = document.getElementById('sticky-nav');
+    const stickyStudzRadio = document.getElementById('sticky-studz-mode');
+    const stickyGameRadio = document.getElementById('sticky-game-mode');
+    const stickyAdsRadio = document.getElementById('sticky-ads-mode');
+    const stickyMerchRadio = document.getElementById('sticky-merch-mode');
+    const heroSection = document.querySelector('.hero-section');
+
+    // Helper function to sync sticky radios with hero radios
+    function syncStickyRadios() {
+        if (adsModeRadio.checked) {
+            stickyAdsRadio.checked = true;
+        } else if (studzModeRadio.checked) {
+            stickyStudzRadio.checked = true;
+        } else if (gameModeRadio.checked) {
+            stickyGameRadio.checked = true;
+        } else if (merchModeRadio.checked) {
+            stickyMerchRadio.checked = true;
+        }
+    }
+
+    // Helper function to sync hero radios with sticky radios
+    function syncHeroRadios() {
+        if (stickyAdsRadio.checked) {
+            adsModeRadio.checked = true;
+        } else if (stickyStudzRadio.checked) {
+            studzModeRadio.checked = true;
+        } else if (stickyGameRadio.checked) {
+            gameModeRadio.checked = true;
+        } else if (stickyMerchRadio.checked) {
+            merchModeRadio.checked = true;
+        }
+    }
+
+    studzModeRadio.addEventListener('change', function() {
+        if (this.checked) {
+            AudioManager.play('switch');
+            studzModeContent.classList.add('active');
+            coinModeContent.classList.remove('active');
+            // Sync sticky nav to match hero state
+            syncStickyRadios();
+        }
+    });
+
+    gameModeRadio.addEventListener('change', function() {
+        if (this.checked) {
+            AudioManager.play('switch');
+            syncStickyRadios();
+            window.location.href = '/stax';
+        }
+    });
+
+    adsModeRadio.addEventListener('change', function() {
+        if (this.checked) {
+            AudioManager.play('switch');
+            adsModeContent.classList.add('active');
+            studzModeContent.classList.remove('active');
+
+            // Sync sticky nav to match hero state
+            syncStickyRadios();
+        }
+    });
+
+    merchModeRadio.addEventListener('change', function() {
+        if (this.checked) {
+            AudioManager.play('switch');
+            syncStickyRadios();
+            window.location.href = '/merch';
+        }
+    });
+
+    stickyStudzRadio.addEventListener('change', function() {
+        if(this.checked) {
+            studzModeRadio.checked = true; 
+            // We must manually dispatch the event for the listener to fire
+            studzModeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+    stickyGameRadio.addEventListener('change', function() {
+        if(this.checked) {
+            gameModeRadio.checked = true;
+            gameModeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+    stickyAdsRadio.addEventListener('change', function() {
+        if(this.checked) {
+            adsModeRadio.checked = true;
+            // Dispatch event to run your animation reset logic
+            adsModeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+    stickyMerchRadio.addEventListener('change', function() {
+        if(this.checked) {
+            merchModeRadio.checked = true;
+            merchModeRadio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+    // Edge case: ensure initial sync on page load
+    window.addEventListener('load', function() {
+        syncStickyRadios();
+    });
+
+    // ===== CATEGORY FILTERING =====
+    const categoryStuds = document.querySelectorAll('.category-stud');
+    const productsCenter = document.getElementById('productsCenter');
+
+    categoryStuds.forEach(stud => {
+        stud.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all studs
+            categoryStuds.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to clicked stud
+            this.classList.add('active');
+            
+            const category = this.dataset.category;
+            
+            try {
+                const response = await fetch(`/api/products/?category=${category}`);
+                const data = await response.json();
+                
+                // Build HTML for products
+                let html = '';
+                if (data.products && data.products.length > 0) {
+                    data.products.forEach(product => {
+                        html += `
+                            <div class="product-card" data-product-id="${product.id}">
+                                <div class="card-header-stripe"></div>
+                                <div class="product-image-container">
+                                    ${product.stock < 5 && product.stock > 0 ? '<div class="limited-badge">LIMITED</div>' : ''}
+                                    ${product.stock <= 0 ? '<div class="limited-badge" style="background: #999;">OUT OF STOCK</div>' : ''}
+                                    <img src="${product.image_url}" alt="${product.name}">
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name">${product.name}</h3>
+                                    <p class="product-price">$${product.price}</p>
+                                    <button class="product-buy-btn" onclick="window.location.href='/product/0/'.replace('/0/', '/' + ${product.id} + '/')">
+                                        GRAB IT NOW
+                                    </button>
+                                </div>
+                                <div class="card-studs top-left"></div>
+                                <div class="card-studs top-right"></div>
+                                <div class="card-studs bottom-left"></div>
+                                <div class="card-studs bottom-right"></div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = '<p style="grid-column: 1 / -1; text-align: center; color: #999; padding: 2rem;">No products available in this category</p>';
+                }
+                
+                productsCenter.innerHTML = html;
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                productsCenter.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #999; padding: 2rem;">Error loading products</p>';
+            }
+        });
+    });
+
+    // Auto-click the first non-featured category stud on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstNonFeaturedStud = document.querySelector('.category-stud:not([data-category="featured"])');
+        if (firstNonFeaturedStud) {
+            firstNonFeaturedStud.click();
+        }
+    });
+
+    // 2. Scroll Visibility Logic
+    function handleScroll() {
+        if (!heroSection) return;
+        
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        
+        // If the bottom of the hero is above the top of the screen ( < 0 )
+        // OR if we are significantly down the page
+        if (heroBottom < 100) { 
+            stickyNav.classList.add('visible');
+        } else {
+            stickyNav.classList.remove('visible');
+        }
+    }
+
+    // Listen for scroll
+    window.addEventListener('scroll', handleScroll);
+    // Check initially in case of refresh
+    handleScroll();
+</script>
+
+<script>
+	// ===== AUDIO MANAGER =====
+	const AudioManager = {
+		sounds: {
+			switch: new Audio('/static/sfx/switch.0714d20aa9a7.mp3'),
+			studzStacking: new Audio('/static/sfx/studz-stacking.b8001722ff2e.mp3'),
+			wallBreak: new Audio('/static/sfx/wall-break.03a988643e87.mp3'),
+			click: new Audio('/static/sfx/click.5c079f894c75.mp3')
+		},
+
+		play: function(soundName) {
+			const sound = this.sounds[soundName];
+			if (sound) {
+				sound.currentTime = 0;
+				sound.play().catch(err => console.log('Audio play error:', err));
+			}
+		},
+
+		stopAll: function() {
+			Object.values(this.sounds).forEach(sound => {
+				sound.pause();
+				sound.currentTime = 0;
+			});
+		}
+	};
+
+	// Global button click handler for click sound
+	document.addEventListener('click', function(e) {
+		const target = e.target.closest('button');
+		if (target) {
+			// Don't play click sound for mode buttons (they have their own switch sound)
+			if (!target.matches('[name="mode"], [name="sticky-mode"]')) {
+				AudioManager.play('click');
+			}
+		}
+	}, true);
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const wall = document.getElementById('studWall');
+		const container = document.getElementById('impactContainer');
+		
+		// Configuration
+		const CLICKS_TO_BREAK = 5; // How many clicks until wall falls
+		let clickCount = 0;
+		let isBroken = false;
+
+		const fistIcon = '👊'; 
+		const crackImgSrc = '/static/images/crack.215ff9a67454.png'; // Path to your crack PNG
+
+		wall.addEventListener('click', (e) => {
+			if (isBroken) return; // Stop interaction if wall is gone
+
+			// Get click position relative to the container
+			const rect = wall.getBoundingClientRect();
+			const x = e.clientX - rect.left;
+			const y = e.clientY - rect.top;
+
+			createImpact(x, y);
+			AudioManager.play('click');
+			clickCount++;
+
+			// Trigger the collapse
+			if (clickCount >= CLICKS_TO_BREAK) {
+				isBroken = true;
+				// Play wall break sound on the final click
+				AudioManager.play('wallBreak');
+				setTimeout(() => {
+					wall.classList.add('wall-collapsed');
+					const strips = document.querySelectorAll('.construction-strip');
+					strips.forEach(strip => {
+						strip.style.opacity = '0';
+						strip.style.transition = 'opacity 0.3s ease-out';
+					});
+				}, 500); // Slight delay after last hit for dramatic effect
+			}
+		});
+
+		function createImpact(x, y) {
+			// 1. Create the Fist Element
+			const fist = document.createElement('div');
+			fist.classList.add('impact-fist');
+			fist.innerHTML = fistIcon;
+			fist.style.left = x + 'px';
+			fist.style.top = y + 'px';
+
+			// 2. Create the Crack Image
+			const crack = document.createElement('img');
+			crack.src = crackImgSrc;
+			crack.classList.add('wall-crack');
+			crack.style.left = x + 'px';
+			crack.style.top = y + 'px';
+			
+			// Random rotation for the crack so they don't look identical
+			const randomRot = Math.floor(Math.random() * 360);
+			crack.style.transform = `translate(-50%, -50%) rotate(${randomRot}deg)`;
+
+			// 3. Append to DOM
+			container.appendChild(fist);
+			container.appendChild(crack);
+
+			// 4. Cleanup the fist element after animation ends (keep the crack)
+			setTimeout(() => {
+				fist.remove();
+			}, 500);
+		}
+	});
+</script>
+
+<script>
+	// === CAROUSEL SCROLL HANDLER ===
+	function scrollCarousel(direction) {
+		const container = document.querySelector('.reels-carousel-container');
+		if (!container) return;
+		
+		const scrollAmount = 340; // reel width (300px) + gap (40px)
+		if (direction === 'left') {
+			container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+		} else if (direction === 'right') {
+			container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+		}
+	}
+
+	// === LAZY LOAD SOCIAL MEDIA VIDEOS ===
+	const videoObserver = new IntersectionObserver((entries) => {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				const video = entry.target;
+				const src = video.dataset.src;
+				if (src && !video.src) {
+					const source = video.querySelector('source[data-src]');
+					if (source) {
+						source.src = source.dataset.src;
+						source.removeAttribute('data-src');
+					}
+					video.src = src;
+					video.removeAttribute('data-src');
+					video.autoplay = true;
+					videoObserver.unobserve(video);
+				}
+			}
+		});
+	}, { rootMargin: '100px' });
+
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelectorAll('.reel-media[data-src]').forEach(video => {
+			videoObserver.observe(video);
+		});
+	});
+
+	// === PRODUCTS CAROUSEL AUTO-SCROLL DEMO (DESKTOP & MOBILE) ===
+	document.addEventListener('DOMContentLoaded', () => {
+		const productsCenter = document.getElementById('productsCenter');
+		
+		const triggerAutoScroll = () => {
+			if (!productsCenter) return;
+			
+			const productCards = productsCenter.querySelectorAll('.product-card');
+			if (productCards.length < 2) return;
+			
+			// Check if scrollable (container width > 600px OR on mobile)
+			const isMobile = window.innerWidth <= 768;
+			const isScrollable = productsCenter.scrollWidth > productsCenter.clientWidth || isMobile;
+			
+			if (isScrollable && productCards.length >= 2) {
+				// Wait a bit for page to settle, then animate scroll
+				setTimeout(() => {
+					const cardWidth = isMobile ? 180 : 280;
+					const gap = isMobile ? 24 : 32; // 1.5rem or 2rem in px
+					const scrollAmount = cardWidth + gap;
+					
+					// Scroll right to show more products
+					productsCenter.scrollBy({
+						left: scrollAmount * 2,
+						behavior: 'smooth'
+					});
+					
+					// After a moment, scroll back to show they can scroll
+					setTimeout(() => {
+						productsCenter.scrollBy({
+							left: -scrollAmount,
+							behavior: 'smooth'
+						});
+					}, 2500);
+				}, 500);
+			}
+		};
+		
+		triggerAutoScroll();
+		
+		// Re-check on window resize
+		window.addEventListener('resize', () => {
+			triggerAutoScroll();
+		});
+	});
+
+	// === NEWSLETTER SUBSCRIPTION HANDLER ===
+	const newsletterForm = document.getElementById('newsletterForm');
+	const emailInput = document.getElementById('emailInput');
+	const subscriptionMessage = document.getElementById('subscriptionMessage');
+
+	if (newsletterForm) {
+		newsletterForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			
+			const email = emailInput.value.trim().toLowerCase();
+			
+			// Hide previous message
+			subscriptionMessage.style.display = 'none';
+			subscriptionMessage.className = 'subscription-message';
+			
+			// Disable button while submitting
+			const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+			const originalText = submitBtn.textContent;
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'SUBSCRIBING...';
+			
+			try {
+				const response = await fetch('/subscribe-newsletter/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: email })
+				});
+				
+				const data = await response.json();
+				
+				// Show message
+				subscriptionMessage.style.display = 'block';
+				
+				if (data.success) {
+					subscriptionMessage.classList.add('success');
+					subscriptionMessage.textContent = data.message;
+					emailInput.value = '';
+					
+					// Auto-hide after 5 seconds
+					setTimeout(() => {
+						subscriptionMessage.style.display = 'none';
+					}, 5000);
+				} else {
+					subscriptionMessage.classList.add('error');
+					subscriptionMessage.textContent = data.error || 'Subscription failed. Please try again.';
+				}
+			} catch (error) {
+				console.error('Newsletter subscription error:', error);
+				subscriptionMessage.style.display = 'block';
+				subscriptionMessage.classList.add('error');
+				subscriptionMessage.textContent = 'An error occurred. Please try again.';
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.textContent = originalText;
+			}
+		});
+	}
+
+
+		// === ADS CONTACT FORM HANDLER ===
+		const adsContactForm = document.getElementById('adsContactForm');
+		const adsContactMessage = document.getElementById('ads-contact-message');
+
+		if (adsContactForm) {
+			adsContactForm.addEventListener('submit', async (e) => {
+				e.preventDefault();
+
+				const name = document.getElementById('ads-name').value.trim();
+				const email = document.getElementById('ads-email').value.trim().toLowerCase();
+				const company = document.getElementById('ads-company').value.trim();
+				const message = document.getElementById('ads-message').value.trim();
+
+				// Hide previous message
+				adsContactMessage.style.display = 'none';
+				adsContactMessage.className = 'ads-contact-message';
+
+				// Disable button while submitting
+				const submitBtn = adsContactForm.querySelector('button[type="submit"]');
+				const originalText = submitBtn.textContent;
+				submitBtn.disabled = true;
+				submitBtn.textContent = 'SENDING...';
+
+				try {
+					const response = await fetch('/advertising-contact/', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							name: name,
+							email: email,
+							company: company,
+							message: message
+						})
+					});
+
+					const data = await response.json();
+
+					// Show message
+					adsContactMessage.style.display = 'block';
+
+					if (data.success) {
+						adsContactMessage.classList.add('success');
+						adsContactMessage.textContent = data.message;
+						adsContactForm.reset();
+					} else {
+						adsContactMessage.classList.add('error');
+						adsContactMessage.textContent = data.error || 'Submission failed. Please try again.';
+					}
+				} catch (error) {
+					console.error('ADS contact form error:', error);
+					adsContactMessage.style.display = 'block';
+					adsContactMessage.classList.add('error');
+					adsContactMessage.textContent = 'An error occurred. Please try again.';
+				} finally {
+					submitBtn.disabled = false;
+					submitBtn.textContent = originalText;
+				}
+			});
+		}
+	// Vault Wallet Linking and Price Fetching
+	let vaultWalletAddress = null;
+	let vaultWalletProvider = null;
+
+	const vaultConnectWalletBtn = document.getElementById('vaultConnectWalletBtn');
+	const vaultErrorMessage = document.getElementById('vaultErrorMessage');
+
+	// Configuration from settings
+	const SOLANA_NETWORK = 'mainnet';
+	const STUDZ_TOKEN_MINT = '7dCNEkKTsSfKNgq51ma33AYHNfMiCPaxXppMJHZJpiX7';
+	
+	// Determine API endpoints based on network
+	const API_CONFIG = {
+		devnet: 'https://api-v3-devnet.raydium.io',
+		mainnet: 'https://api-v3.raydium.io'
+	};
+	const PRICE_API_URL = `${API_CONFIG[SOLANA_NETWORK] || API_CONFIG.devnet}/mint/price?mints=${STUDZ_TOKEN_MINT}`;
+
+	function showVaultError(message) {
+		vaultErrorMessage.textContent = message;
+		vaultErrorMessage.classList.add('active');
+		setTimeout(() => {
+			vaultErrorMessage.classList.remove('active');
+		}, 5000);
+	}
+
+	async function fetchStudzBalance(walletAddress) {
+		try {
+			const rpcUrl = SOLANA_NETWORK === 'mainnet' 
+				? 'https://mainnet.helius-rpc.com/?api-key=0ab21ef4-e203-460e-b594-e2c83460872f'
+				: 'https://api.devnet.solana.com';
+			
+			const connection = new solanaWeb3.Connection(rpcUrl, 'confirmed');
+			const publicKey = new solanaWeb3.PublicKey(walletAddress);
+			const tokenMintPubkey = new solanaWeb3.PublicKey(STUDZ_TOKEN_MINT);
+
+			// Get token accounts
+			const tokenAccounts = await connection.getParsedTokenAccountsByOwner(publicKey, {
+				mint: tokenMintPubkey
+			});
+            
+            console.log(tokenAccounts)
+
+			if (tokenAccounts.value.length === 0) {
+				return 0;
+			}
+
+			const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+			return Math.floor(balance);
+		} catch (error) {
+			console.error('Error fetching STUDZ balance:', error);
+			return 0;
+		}
+	}
+
+	async function vaultConnectWallet() {
+		try {
+			// Check if Phantom wallet is available
+			if (!window.solana || !window.solana.isPhantom) {
+				showVaultError('Phantom Wallet not found. Please install it to continue.');
+				return;
+			}
+
+			// Request connection
+			const resp = await window.solana.connect();
+			
+			if (resp.publicKey) {
+				vaultWalletAddress = resp.publicKey.toString();
+				vaultWalletProvider = window.solana;
+				
+				// Fetch STUDZ balance on critical path, defer price fetch
+				const balance = await fetchStudzBalance(vaultWalletAddress);
+				
+				// Defer price fetch to idle time to avoid blocking critical path
+				if (typeof requestIdleCallback !== 'undefined') {
+					requestIdleCallback(() => {
+						fetchStudzPrice().then(price => {
+							const balanceUSD = price ? (balance * price).toFixed(2) : 'N/A';
+							console.log(`Vault Balance: ${balance.toLocaleString()} STUDZ ($${balanceUSD} USD)`);
+
+							const container = document.getElementById('stud-stack-container');
+							if (balanceUSD >= 500) {
+								container.classList.add('large');
+							} else if (balanceUSD >= 100) {
+								container.classList.add('medium');
+							} else {
+								container.classList.add('small');
+							}
+						});
+					});
+				} else {
+					setTimeout(() => {
+						fetchStudzPrice().then(price => {
+							const balanceUSD = price ? (balance * price).toFixed(2) : 'N/A';
+							console.log(`Vault Balance: ${balance.toLocaleString()} STUDZ ($${balanceUSD} USD)`);
+
+							const container = document.getElementById('stud-stack-container');
+							if (balanceUSD >= 500) {
+								container.classList.add('large');
+							} else if (balanceUSD >= 100) {
+								container.classList.add('medium');
+							} else {
+								container.classList.add('small');
+							}
+						});
+					}, 0);
+				}
+				
+				const vaultCountEl = document.getElementById('vault-count');
+				if (vaultCountEl) {
+					vaultCountEl.textContent = balance.toLocaleString();
+				}
+				
+				// Update UI
+				vaultConnectWalletBtn.textContent = 'CONNECTED';
+				vaultConnectWalletBtn.disabled = true;
+			}
+		} catch (error) {
+			console.error('Wallet connection error:', error);
+			showVaultError(`Connection failed: ${error.message}`);
+		}
+	}
+
+	// Initialize on page load
+	window.addEventListener('load', async () => {
+		// Auto-connect if wallet is already connected
+		if (window.solana && window.solana.isPhantom && window.solana.isConnected) {
+			try {
+				const resp = await window.solana.connect({ onlyIfTrusted: true });
+				if (resp.publicKey) {
+					vaultWalletAddress = resp.publicKey.toString();
+					vaultWalletProvider = window.solana;
+					
+					// Fetch STUDZ balance on critical path, defer price fetch
+					const balance = await fetchStudzBalance(vaultWalletAddress);
+					
+					// Defer price fetch to idle time to avoid blocking critical path
+					if (typeof requestIdleCallback !== 'undefined') {
+						requestIdleCallback(() => {
+							fetchStudzPrice().then(price => {
+								const balanceUSD = price ? (balance * price).toFixed(2) : 'N/A';
+								console.log(`Vault Balance: ${balance.toLocaleString()} STUDZ ($${balanceUSD} USD)`);
+
+								const container = document.getElementById('stud-stack-container');
+								if (balanceUSD >= 500) {
+									container.classList.add('large');
+								} else if (balanceUSD >= 100) {
+									container.classList.add('medium');
+								} else {
+									container.classList.add('small');
+								}
+							});
+						});
+					} else {
+						setTimeout(() => {
+							fetchStudzPrice().then(price => {
+								const balanceUSD = price ? (balance * price).toFixed(2) : 'N/A';
+								console.log(`Vault Balance: ${balance.toLocaleString()} STUDZ ($${balanceUSD} USD)`);
+
+								const container = document.getElementById('stud-stack-container');
+								if (balanceUSD >= 500) {
+									container.classList.add('large');
+								} else if (balanceUSD >= 100) {
+									container.classList.add('medium');
+								} else {
+									container.classList.add('small');
+								}
+							});
+						}, 0);
+					}
+					
+					const vaultCountEl = document.getElementById('vault-count');
+					if (vaultCountEl) {
+						vaultCountEl.textContent = balance.toLocaleString();
+					}
+					
+					vaultConnectWalletBtn.textContent = 'CONNECTED';
+					vaultConnectWalletBtn.disabled = true;
+				}
+			} catch (e) {
+				console.log('Auto-connect to vault wallet failed:', e);
+			}
+		}
+	});
+</script>
+
+<script>
+    // ===== STUDZ PROFILE FUNCTIONALITY =====
+    const studzRanks = [
+        { name: "STUDZ Novice", min_amount: 0, max_amount: 20000, image: "STUDZ-Novice.png" },
+        { name: "STUDZ Stacker", min_amount: 20000, max_amount: 100000, image: "STUDZ-Stacker.png" },
+        { name: "STUDZ Builder", min_amount: 100000, max_amount: 500000, image: "STUDZ-Builder.png" },
+        { name: "STUDZ Foreman", min_amount: 500000, max_amount: 1000000, image: "STUDZ-Foreman.png" },
+        { name: "STUDZ Architect", min_amount: 1000000, max_amount: null, image: "STUDZ-Architect.png" }
+    ];
+
+    function getRankByAmount(amount) {
+        return (
+            studzRanks.find(
+                rank => amount >= rank.min_amount && (rank.max_amount === null || amount < rank.max_amount)
+            ) || studzRanks[0]
+        );
+    }
+
+    // Helper function to detect if user is on mobile
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Helper function to detect if user is on iOS
+    function isIOS() {
+        return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    // Helper function to detect if user is on Android
+    function isAndroid() {
+        return /Android/i.test(navigator.userAgent);
+    }
+
+    // === OPTIMIZED PRICE FETCHING WITH CACHING ===
+    const PRICE_CACHE_KEY = 'studz_price_cache';
+    const PRICE_CACHE_DURATION = 60000; // 1 minute
+
+    // Helper to get cached price
+    function getCachedPrice() {
+        try {
+            const cached = localStorage.getItem(PRICE_CACHE_KEY);
+            if (cached) {
+                const { price, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < PRICE_CACHE_DURATION) {
+                    return price;
+                }
+            }
+        } catch (e) {
+            console.error('Cache read error:', e);
+        }
+        return null;
+    }
+
+    // Helper to set cached price
+    function setCachedPrice(price) {
+        try {
+            localStorage.setItem(PRICE_CACHE_KEY, JSON.stringify({
+                price,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.error('Cache write error:', e);
+        }
+    }
+
+    // Cache for STUDZ price to avoid duplicate requests
+    let cachedStudzPrice = null;
+    let priceFetchInProgress = null;
+
+    // Updated fetchStudzPrice with better caching
+    async function fetchStudzPrice() {
+        // Return cached price if available
+        if (cachedStudzPrice !== null) {
+            return cachedStudzPrice;
+        }
+
+        // Check localStorage cache
+        const cached = getCachedPrice();
+        if (cached !== null) {
+            cachedStudzPrice = cached;
+            return cachedStudzPrice;
+        }
+
+        // If fetch is already in progress, wait for it
+        if (priceFetchInProgress) {
+            return priceFetchInProgress;
+        }
+
+        const STUDZ_TOKEN_MINT = '7dCNEkKTsSfKNgq51ma33AYHNfMiCPaxXppMJHZJpiX7';
+
+        priceFetchInProgress = fetch(`https://api.dexscreener.com/latest/dex/tokens/${STUDZ_TOKEN_MINT}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.pairs?.length > 0) {
+                    const sortedPairs = data.pairs.sort((a, b) => 
+                        parseFloat(b.liquidity?.usd || 0) - parseFloat(a.liquidity?.usd || 0)
+                    );
+                    cachedStudzPrice = parseFloat(sortedPairs[0].priceUsd);
+                    setCachedPrice(cachedStudzPrice); // Cache to localStorage
+                    console.log('Price fetched from DexScreener:', cachedStudzPrice);
+                    return cachedStudzPrice;
+                }
+                console.warn('No pairs found on DexScreener');
+                return null;
+            })
+            .catch(e => {
+                console.error('DexScreener API failed:', e);
+                return null;
+            })
+            .finally(() => {
+                priceFetchInProgress = null;
+            });
+
+        return priceFetchInProgress;
+    }
+
+    async function connectWalletProfile() {
+        try {
+            // Ensure Solana Web3.js is loaded
+            await window.loadSolanaWeb3();
+            
+            const isMobile = isMobileDevice();
+            
+            // If on mobile, use deep linking to open Phantom app
+            if (isMobile) {
+                // Check if Phantom app is installed by checking if provider exists
+                if (!window.solana || !window.solana.isPhantom) {
+                    // Phantom app not detected - redirect to deep link to open app or app store
+                    const currentUrl = window.location.href;
+                    
+                    // Create deep link URL
+                    // Format: https://phantom.app/ul/browse/{encodedUrl}?ref={encodedUrl}
+                    const encodedUrl = encodeURIComponent(currentUrl);
+                    const deepLinkUrl = `https://phantom.app/ul/browse/${encodedUrl}?ref=${encodedUrl}`;
+                    
+                    console.log('Redirecting to Phantom app via deep link...');
+                    window.location.href = deepLinkUrl;
+                    return;
+                }
+            } else {
+                // Desktop - check if extension is installed
+                if (!window.solana || !window.solana.isPhantom) {
+                    alert('Phantom Wallet extension not found. Please install it from https://phantom.app/download');
+                    return;
+                }
+            }
+
+            const connectBtn = document.querySelector('#profile-before-connect .profile-btn');
+            if (!connectBtn) return;
+
+            const originalText = connectBtn.textContent;
+            connectBtn.textContent = 'CONNECTING...';
+            connectBtn.disabled = true;
+
+            // Show "Fetching..." for the price display
+            const priceDisplays = document.querySelectorAll('#profile-before-connect .stat-value');
+            if (priceDisplays.length >= 2) priceDisplays[1].textContent = "Fetching...";
+
+            const resp = await window.solana.connect({ onlyIfTrusted: false });
+            if (!resp.publicKey) throw new Error('Failed to connect wallet');
+
+            // IMPORTANT: Clear the disconnect flag when user connects
+            localStorage.removeItem('studz-wallet-disconnected');
+
+            const walletAddress = resp.publicKey.toString();
+            // Use requestIdleCallback to defer price fetch off critical path
+            const [walletAmount, studzPrice] = await Promise.all([
+                fetchStudzBalance(walletAddress), 
+                new Promise(resolve => {
+                    if (typeof requestIdleCallback !== 'undefined') {
+                        requestIdleCallback(() => fetchStudzPrice().then(resolve));
+                    } else {
+                        setTimeout(() => fetchStudzPrice().then(resolve), 0);
+                    }
+                })
+            ]);
+
+            const usdValue = studzPrice ? walletAmount * studzPrice : 0;
+            const rank = getRankByAmount(walletAmount);
+
+            document.getElementById("profile-rank-display").textContent = rank.name;
+            document.getElementById("profile-amount-display").textContent = walletAmount.toLocaleString();
+            document.getElementById("profile-value-display").textContent = "$" + usdValue.toFixed(2);
+
+            const rankImage = document.getElementById("profile-rank-image");
+            if (rankImage && rankImage.src) {
+                rankImage.src = rankImage.src.replace(/[^\/]*\.(?:png|jpg)$/, rank.image);
+            }
+
+            document.getElementById("profile-before-connect").classList.remove("active");
+            document.getElementById("profile-after-connect").classList.add("active");
+
+            if (studzPrice) {
+                if (priceDisplays.length >= 2) priceDisplays[1].textContent = "$" + studzPrice.toFixed(8);
+            }
+        } catch (error) {
+            console.error('Wallet connection error:', error);
+            
+            if (error.message !== 'User rejected the request.') {
+                alert(`Connection failed: ${error.message}`);
+            }
+            
+            const connectBtn = document.querySelector('#profile-before-connect .profile-btn');
+            if (connectBtn) {
+                connectBtn.textContent = 'CONNECT WALLET';
+                connectBtn.disabled = false;
+            }
+        }
+    }
+
+    async function disconnectWallet() {
+        try {
+            if (!window.solana || !window.solana.isPhantom) {
+                console.error('Phantom wallet not found');
+                return;
+            }
+
+            // 1. Disconnect from the wallet
+            await window.solana.disconnect();
+            
+            // 2. Clear ALL wallet-related state
+            vaultWalletAddress = null;
+            vaultWalletProvider = null;
+            
+            // 3. Clear localStorage to prevent eager reconnection
+            localStorage.setItem('studz-wallet-disconnected', 'true');
+            
+            // 4. Clear sessionStorage (in case anything is stored there)
+            sessionStorage.removeItem('walletAddress');
+            sessionStorage.removeItem('walletConnected');
+            
+            // 5. Remove Phantom's event listeners to prevent automatic reconnection
+            if (window.solana && window.solana.removeAllListeners) {
+                window.solana.removeAllListeners('connect');
+                window.solana.removeAllListeners('disconnect');
+                window.solana.removeAllListeners('accountChanged');
+            }
+            
+            // 6. Reset UI state
+            document.getElementById("profile-after-connect").classList.remove("active");
+            document.getElementById("profile-before-connect").classList.add("active");
+            
+            // Reset profile data
+            document.getElementById("profile-rank-display").textContent = "CONNECT WALLET";
+            document.getElementById("profile-amount-display").textContent = "0";
+            document.getElementById("profile-value-display").textContent = "$0.00";
+            
+            // Reset connect button
+            const connectBtn = document.querySelector('#profile-before-connect .profile-btn');
+            if (connectBtn) {
+                connectBtn.textContent = 'CONNECT WALLET';
+                connectBtn.disabled = false;
+            }
+            
+            // 7. Show user instruction to fully revoke from Phantom
+            alert('Wallet disconnected! Note: To prevent automatic reconnection, please also disconnect this site from your Phantom wallet settings:\n\n1. Open Phantom\n2. Go to Settings → Connected Apps\n3. Find this site and click Disconnect');
+            
+            console.log('Wallet disconnected successfully');
+        } catch (error) {
+            console.error('Wallet disconnection error:', error);
+            alert(`Disconnection failed: ${error.message}`);
+        }
+    }
+
+    // === DEFERRED INITIALIZATION ===
+    // Show cached price immediately, fetch fresh price in background
+    function initializePriceDisplay() {
+        const priceDisplay = document.getElementById('current-price-display');
+        if (!priceDisplay) return;
+
+        // 1. Show cached price immediately (if available)
+        const cachedPrice = getCachedPrice();
+        if (cachedPrice) {
+            priceDisplay.textContent = "$" + cachedPrice.toFixed(8);
+            cachedStudzPrice = cachedPrice;
+        }
+
+        // 2. Fetch fresh price in background using requestIdleCallback
+        const fetchFreshPrice = () => {
+            fetchStudzPrice().then(price => {
+                if (price && priceDisplay) {
+                    priceDisplay.textContent = "$" + price.toFixed(8);
+                }
+            });
+        };
+
+        if (typeof requestIdleCallback !== 'undefined') {
+            requestIdleCallback(fetchFreshPrice, { timeout: 2000 });
+        } else {
+            setTimeout(fetchFreshPrice, 1000);
+        }
+    }
+
+    // === UPDATED WINDOW LOAD HANDLER ===
+    window.addEventListener('load', async () => {
+        // Initialize price display (uses cache, fetches in background)
+        initializePriceDisplay();
+
+        // Check if user explicitly disconnected
+        const wasDisconnected = localStorage.getItem('studz-wallet-disconnected') === 'true';
+        
+        // Only auto-connect if NOT manually disconnected
+        if (!wasDisconnected && window.solana?.isPhantom) {
+            try {
+                const resp = await window.solana.connect({ onlyIfTrusted: true });
+                if (resp.publicKey) {
+                    localStorage.removeItem('studz-wallet-disconnected');
+                    
+                    const walletAddress = resp.publicKey.toString();
+                    
+                    // Fetch balance immediately, defer price fetch
+                    const walletAmount = await fetchStudzBalance(walletAddress);
+                    
+                    // Use cached price if available for immediate display
+                    const studzPrice = getCachedPrice() || 0;
+                    const usdValue = studzPrice ? walletAmount * studzPrice : 0;
+                    const rank = getRankByAmount(walletAmount);
+
+                    // Update UI with cached price
+                    document.getElementById("profile-rank-display").textContent = rank.name;
+                    document.getElementById("profile-amount-display").textContent = walletAmount.toLocaleString();
+                    document.getElementById("profile-value-display").textContent = "$" + usdValue.toFixed(2);
+
+                    const rankImage = document.getElementById("profile-rank-image");
+                    if (rankImage && rankImage.src) {
+                        rankImage.src = rankImage.src.replace(/[^\/]*\.(?:png|jpg)$/, rank.image);
+                    }
+
+                    document.getElementById("profile-before-connect").classList.remove("active");
+                    document.getElementById("profile-after-connect").classList.add("active");
+
+                    // Fetch fresh price in background and update
+                    if (typeof requestIdleCallback !== 'undefined') {
+                        requestIdleCallback(() => {
+                            fetchStudzPrice().then(freshPrice => {
+                                if (freshPrice) {
+                                    const newUsdValue = walletAmount * freshPrice;
+                                    document.getElementById("profile-value-display").textContent = 
+                                        "$" + newUsdValue.toFixed(2);
+                                }
+                            });
+                        });
+                    } else {
+                        setTimeout(() => {
+                            fetchStudzPrice().then(freshPrice => {
+                                if (freshPrice) {
+                                    const newUsdValue = walletAmount * freshPrice;
+                                    document.getElementById("profile-value-display").textContent = 
+                                        "$" + newUsdValue.toFixed(2);
+                                }
+                            });
+                        }, 0);
+                    }
+                }
+            } catch (e) {
+                console.log('Auto-connect for profile failed:', e);
+            }
+        }
+    });
+
+    // Updated Phantom disconnect event listener
+    window.addEventListener('load', () => {
+        if (window.solana?.isPhantom) {
+            window.solana.on('disconnect', () => {
+                // Clear wallet state variables
+                vaultWalletAddress = null;
+                vaultWalletProvider = null;
+                
+                // Store disconnect state in localStorage
+                localStorage.setItem('studz-wallet-disconnected', 'true');
+                
+                // Reset UI state
+                document.getElementById("profile-after-connect").classList.remove("active");
+                document.getElementById("profile-before-connect").classList.add("active");
+                
+                // Reset profile data
+                document.getElementById("profile-rank-display").textContent = "CONNECT WALLET";
+                document.getElementById("profile-amount-display").textContent = "0";
+                document.getElementById("profile-value-display").textContent = "$0.00";
+                
+                // Reset connect button
+                const connectBtn = document.querySelector('#profile-before-connect .profile-btn');
+                if (connectBtn) {
+                    connectBtn.textContent = 'CONNECT WALLET';
+                    connectBtn.disabled = false;
+                }
+                
+                console.log('Wallet disconnected via Phantom event');
+            });
+        }
+    });
+
+    // === COUNTDOWN TIMER FOR HERO SECTION ===
+    function initializeCountdownTimer() {
+        const endDatetimeStr = '';
+        if (!endDatetimeStr || endDatetimeStr === '') {
+            return; // No timer to display
+        }
+
+        // Parse the datetime string from Django template
+        const endDateTime = new Date(endDatetimeStr);
+        
+        function updateTimer() {
+            const now = new Date();
+            const timeRemaining = endDateTime - now;
+            
+            if (timeRemaining <= 0) {
+                // Timer has expired - hide it
+                const timerWrapper = document.querySelector('.hero-timer-wrapper');
+                if (timerWrapper) {
+                    timerWrapper.style.display = 'none';
+                }
+                return;
+            }
+            
+            // Calculate time units
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            
+            // Update DOM - Universal timer
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            
+            if (daysEl && daysEl.querySelector('span')) daysEl.querySelector('span').textContent = String(days).padStart(2, '0');
+            if (hoursEl && hoursEl.querySelector('span')) hoursEl.querySelector('span').textContent = String(hours).padStart(2, '0');
+            if (minutesEl && minutesEl.querySelector('span')) minutesEl.querySelector('span').textContent = String(minutes).padStart(2, '0');
+            if (secondsEl && secondsEl.querySelector('span')) secondsEl.querySelector('span').textContent = String(seconds).padStart(2, '0');
+        }
+        
+        // Update timer immediately
+        updateTimer();
+        
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+    }
+    
+    // Initialize timer when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCountdownTimer);
+    } else {
+        initializeCountdownTimer();
+    }
+</script>
+
+
+    <!-- Cart Count Indicator -->
+    <div id="cart-indicator" class="cart-indicator hidden">
+        <div class="cart-badge">
+            <img src="/static/images/studz-cart.6300ed43f009.png" alt="Cart" class="cart-image" loading="lazy">
+            <div class="cart-count-badge" id="cart-count-badge">
+                <span id="cart-count-number">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Logic - Defer to end of page -->
+    <script>
+        // Update cart indicator on page load and whenever cart changes
+        function updateCartIndicator() {
+            const cartIndicator = document.getElementById('cart-indicator');
+            const cartCountNumber = document.getElementById('cart-count-number');
+            
+            // Get cart from page context - Django template renders this
+            const cartElement = document.querySelector('[data-cart-count]');
+            let itemCount = 0;
+            
+            if (cartElement) {
+                itemCount = parseInt(cartElement.getAttribute('data-cart-count')) || 0;
+            }
+            
+            // Update visibility and count
+            if (itemCount > 0) {
+                cartIndicator.classList.remove('hidden');
+                cartCountNumber.textContent = itemCount;
+            } else {
+                cartIndicator.classList.add('hidden');
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartIndicator();
+            
+            // Add click handler to navigate to cart
+            const cartIndicator = document.getElementById('cart-indicator');
+            cartIndicator.addEventListener('click', () => {
+                window.location.href = '/cart';
+            });
+            
+            // Listen for custom cart update events (cart system dispatches them)
+            document.addEventListener('cartUpdated', () => {
+                updateCartIndicator();
+            });
+        });
+
+        // Also check on visibility change (for cart updates from other tabs)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                updateCartIndicator();
+            }
+        });
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CK4QL4CD16"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-CK4QL4CD16');
+    </script>
+</body>
+</html>
